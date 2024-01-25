@@ -3,6 +3,7 @@ online=false
 dointro=true
 dobreakfast=true
 dolunch=true
+dodivine=true
 dodinner=true
 currtime=$(date +%H%M)
 
@@ -22,47 +23,84 @@ then
 	dolunch=false
 	echo "Skipping lunch..."
 fi
+if [ $currtime -gt 1500 ];
+then
+	dodivine=false
+	echo "Skipping divine mercy..."
+fi
 if [ $currtime -gt 1800 ];
 then
 	echo "Skipping dinner..."
 	dodinner=false
 fi
+if [ $currtime -gt 1900 ];
+then
+	echo "We're offline."
+	online=false
+fi
 
 while :
 do
 	currtime=$(date +%H%M)
+	echo "Current time is:" $currtime
 	if $online
 	then
-		echo "Current time is:" $currtime
-		if $dobreakfast && [ $currtime -gt 900 ];
+		if $dobreakfast
 		then
-			bash internal/tooling/TTSSpeak.sh "It is now time for breakfast"
-			sleep 5
-			bash internal/tooling/TTSSpeak.sh "In the name of the father, and of the son, and of the holy spirit. Bless us O Lord and these Thy gifts, which we are about to receive from Thy bounty. Through Christ, our Lord. Amen."
-			dobreakfast=false
-			echo "Sleeping 1 hour for breakfast..."
-			sleep 3600
-			bash internal/tooling/TTSSpeak.sh "Breakfast is now over. Go forth to do Gods will."
-		elif $dolunch && [ $currtime -gt 1200 ];
+			if [ $currtime -gt 900 ];
+			then
+				echo "Time for breakfast"
+				aplay tts/BreakfastAnnouncement.wav
+				sleep 5
+				aplay tts/MealPrayer.wav
+				dobreakfast=false
+				echo "Sleeping 1 hour for breakfast..."
+				sleep 3600
+				aplay tts/BreakfastEndAnnouncement.wav
+			fi
+		fi
+		if $dolunch
                 then
-			bash internal/tooling/TTSSpeak.sh "It is now time for lunch"
-			sleep 5
-			bash internal/tooling/TTSSpeak.sh "In the name of the father, and of the son, and of the holy spirit. Bless us O Lord and these Thy gifts, which we are about to receive from Thy bounty. Through Christ, our Lord. Amen."
-			dolunch=false
-			echo "Sleeping 1 hour for breakfast..."
-			sleep 3600
-                        bash internal/tooling/TTSSpeak.sh "Lunch is now over. Go forth to do Gods will."
-		elif $dolunch && [ $currtime -gt 1800 ];
+			if [ $currtime -gt 1200 ];
+			then
+				echo "Time for lunch"
+				aplay tts/LunchAnnouncement.wav
+				sleep 5
+				aplay tts/MealPrayer.wav
+				dolunch=false
+				echo "Sleeping 1 hour for breakfast..."
+				sleep 3600
+                        	aplay tts/LunchEndAnnouncement.wav
+			fi
+		fi
+		if $dodivine
                 then
-			bash internal/tooling/TTSSpeak.sh "It is now time for dinner"
-			sleep 5
-			bash internal/tooling/TTSSpeak.sh "In the name of the father, and of the son, and of the holy spirit. Bless us O Lord and these Thy gifts, which we are about to receive from Thy bounty. Through Christ, our Lord. Amen."
-			dodinner=false
-			echo "Sleeping 1 hour for dinner..."
-			sleep 3600
-		elif $dolunch && [ $currtime -gt 1900 ];
+			if [ $currtime -gt 1500 ];
+			then
+				echo "Time for divine mercy"
+				aplay tts/DivineMercyChapletAnnouncement.wav
+				sleep 5
+				dodivine=false
+				bash internal/PrayDivine.sh
+			fi
+		fi
+		if $dodinner
                 then
-			bash internal/tooling/TTSSpeak.sh "Thank you for tuning in. Dinner is now over. Please join us in closing prayer."
+			if [ $currtime -gt 1800 ];
+			then
+				echo "Time for dinner"
+				aplay tts/DinnerAnnouncement.wav
+				sleep 5
+				aplay tts/MealPrayer.wav
+				dodinner=false
+				echo "Sleeping 1 hour for dinner..."
+				sleep 3600
+			fi
+		fi
+		if [ $currtime -gt 1900 ];
+                then
+			echo "Time to do closing prayers..."
+			aplay tts/ClosingPrayer.wav
 			sleep 5
 			bash internal/PrayRosary.sh
 			online=false
@@ -72,15 +110,19 @@ do
 			dodinner=true
 			aplay Outro.wav
 		else
+			echo "Filling with music..."
 			bash internal/PlayRandomSong.sh
 		fi
 	else
-		if $dointro && [ $currtime > 600 ];
+		if [ $currtime -gt 600 ];
 		then
+			echo "Starting stream..."
 			aplay Outro.wav
 			bash internal/tooling/TTSSpeak.sh "Today is: $(date '+%A-%Y-%m-%d')"
 			bash internal/PrayRosary.sh
 			online=true
+		else
+			echo "We're offline and it's not time to start..."
 		fi
 	fi
 	sleep 1

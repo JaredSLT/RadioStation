@@ -2,9 +2,7 @@
 DOW=$(date +%u)
 presenter=$2
 case $DOW in
-	#Monday
-	2)
-		echo "Monday..."
+	1)
 		case $1 in
 		1)
 			aplay recordings/$presenter/rosary/AnnunciationOfTheBlessedVirginMary.wav
@@ -23,9 +21,7 @@ case $DOW in
 		;;
 		esac
 	;;
-	#Tuesday
-	3)
-		echo "Tuesday..."
+	2)
 		case $1 in
 		1)
 			aplay recordings/$presenter/rosary/TheAgonyOfOurLordJesusChristInTheGarden.wav
@@ -44,9 +40,7 @@ case $DOW in
 		;;
 		esac
 	;;
-	#Wednesday
-	4)
-		echo "Wednesday..."
+	3)
 		case $1 in
 		1)
 			aplay recordings/$presenter/rosary/TheResurrectionOfOurLordJesusChrist.wav
@@ -65,9 +59,7 @@ case $DOW in
 		;;
 		esac
 	;;
-	#Thursday
-	5)
-		echo "Thursday..."
+	4)
 		case $1 in
 		1)
 			aplay recordings/$presenter/rosary/TheBaptismOfTheLordInTheRiverJordan.wav
@@ -86,9 +78,7 @@ case $DOW in
 		;;
 		esac
 	;;
-	#Friday
-	6)
-		echo "Friday..."
+	5)
 		case $1 in
 		1)
 			aplay recordings/$presenter/rosary/TheAgonyOfOurLordJesusChristInTheGarden.wav
@@ -107,9 +97,7 @@ case $DOW in
 		;;
 		esac
 	;;
-	#Saturday
-	7)
-		echo "Saturday..."
+	6)
 		case $1 in
 		1)
 			aplay recordings/$presenter/rosary/AnnunciationOfTheBlessedVirginMary.wav
@@ -128,8 +116,7 @@ case $DOW in
 		;;
 		esac
 	;;
-	#Sunday
-	1)
+	7)
 		case $1 in
 		1)
 			aplay recordings/$presenter/rosary/TheResurrectionOfOurLordJesusChrist.wav
